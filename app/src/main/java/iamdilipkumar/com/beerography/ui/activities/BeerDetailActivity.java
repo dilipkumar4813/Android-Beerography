@@ -1,4 +1,4 @@
-package iamdilipkumar.com.beerography;
+package iamdilipkumar.com.beerography.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,9 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+
+import iamdilipkumar.com.beerography.R;
+import iamdilipkumar.com.beerography.ui.fragments.BeerDetailFragment;
 
 /**
  * An activity representing a single Beer detail screen. This

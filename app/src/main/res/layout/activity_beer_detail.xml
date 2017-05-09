@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="iamdilipkumar.com.beerography.BeerDetailActivity"
+    tools:context="iamdilipkumar.com.beerography.ui.activities.BeerDetailActivity"
     tools:ignore="MergeRootFrame">
 
     <android.support.design.widget.AppBarLayout

@@ -1,4 +1,4 @@
-package iamdilipkumar.com.beerography;
+package iamdilipkumar.com.beerography.ui.fragments;
 
 import android.app.Activity;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -9,7 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import iamdilipkumar.com.beerography.R;
 import iamdilipkumar.com.beerography.dummy.DummyContent;
+import iamdilipkumar.com.beerography.ui.activities.BeerListActivity;
+import iamdilipkumar.com.beerography.ui.activities.BeerDetailActivity;
 
 /**
  * A fragment representing a single Beer detail screen.

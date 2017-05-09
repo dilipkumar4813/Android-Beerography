@@ -1,4 +1,4 @@
-package iamdilipkumar.com.beerography;
+package iamdilipkumar.com.beerography.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import iamdilipkumar.com.beerography.R;
 import iamdilipkumar.com.beerography.dummy.DummyContent;
+import iamdilipkumar.com.beerography.ui.activities.BeerDetailActivity;
+import iamdilipkumar.com.beerography.ui.fragments.BeerDetailFragment;
 
 import java.util.List;
 
