@@ -24,6 +24,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/beerography_initial"
         android:fitsSystemWindows="true">
 
         <LinearLayout
