@@ -2,6 +2,5 @@
     <string name="app_name">Beerography</string>
     <string name="title_beer_detail">Beer Detail</string>
 
-    <string name="title_activity_splash">SplashActivity</string>
     <string name="splash_button">Let\'s get some beers</string>
 </resources>
