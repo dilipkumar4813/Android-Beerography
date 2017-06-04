@@ -4,55 +4,61 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.widget.ImageView;
-
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.util.Log;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import iamdilipkumar.com.beerography.R;
 import iamdilipkumar.com.beerography.adapters.BeerListAdapter;
-import iamdilipkumar.com.beerography.models.Datum;
-import iamdilipkumar.com.beerography.models.Labels;
+import iamdilipkumar.com.beerography.models.SelectedPage;
+import iamdilipkumar.com.beerography.utilities.BeersApiInterface;
+import iamdilipkumar.com.beerography.utilities.NetworkUtils;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class BeerListActivity extends AppCompatActivity {
 
+    private static final String TAG = BeerListActivity.class.getSimpleName();
+
     @BindView(R.id.beer_list_recycler)
     RecyclerView mBeerList;
+
+    CompositeDisposable mCompositeDisposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beer_list);
 
+        mCompositeDisposable = new CompositeDisposable();
         ButterKnife.bind(this);
 
+        BeersApiInterface moviesInterface = NetworkUtils.buildRetrofit().create(BeersApiInterface.class);
+
+        mCompositeDisposable.add(moviesInterface.getBeersList(1)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::apiResponse, this::apiError));
+    }
+
+    private void apiResponse(SelectedPage selectedPage) {
         mBeerList.setHasFixedSize(true);
 
-        StaggeredGridLayoutManager gaggeredGridLayoutManager = new StaggeredGridLayoutManager(3, 1);
+        StaggeredGridLayoutManager gaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
         mBeerList.setLayoutManager(gaggeredGridLayoutManager);
 
-        List<Datum> gaggeredList = getListItemData();
-
-        BeerListAdapter rcAdapter = new BeerListAdapter(BeerListActivity.this, gaggeredList);
+        BeerListAdapter rcAdapter = new BeerListAdapter(BeerListActivity.this, selectedPage.getData());
         mBeerList.setAdapter(rcAdapter);
     }
 
-    private List<Datum> getListItemData() {
-        List<Datum> items = new ArrayList<>();
+    private void apiError(Throwable throwable) {
+        Log.d(TAG, throwable.getLocalizedMessage());
+    }
 
-        for (int i = 0; i < 12; i++) {
-            Datum item = new Datum();
-            item.setName("Beer " + i);
-            Labels label = new Labels();
-            label.setMedium("https://s3.amazonaws.com/brewerydbapi/beer/tmEthz/upload_3Jl1St-medium.png");
-            item.setLabels(label);
-            items.add(item);
-        }
-
-        return items;
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mCompositeDisposable.clear();
     }
 }

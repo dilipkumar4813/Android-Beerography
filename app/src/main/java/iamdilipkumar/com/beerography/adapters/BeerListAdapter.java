@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -49,15 +50,24 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerIt
 
         holder.beerName.setText(beerItem.getName());
 
-        String beerImage = beerItem.getLabels().getMedium();
-        Log.d("image", beerImage);
+        String beerImage = "";
+        if (beerItem.getLabels() != null) {
+            if (beerItem.getLabels().getMedium() != null) {
+                beerImage = beerItem.getLabels().getMedium();
+            }
 
-        Picasso.with(mContext)
-                .load(beerImage)
-                .placeholder(R.mipmap.ic_launcher)
-                .resize(200,200)
-                .centerCrop()
-                .into(holder.beerImage);
+            Picasso.with(mContext)
+                    .load(beerImage)
+                    .error(R.drawable.container_1)
+                    .placeholder(R.drawable.container_1)
+                    .resize(200, 200)
+                    .centerCrop()
+                    .into(holder.beerImage);
+            Log.d("image", beerImage);
+        } else {
+            int resource = position % 2 == 0 ? R.drawable.container_1 : R.drawable.container_2;
+            holder.beerImage.setImageResource(resource);
+        }
     }
 
     @Override
