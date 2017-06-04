@@ -50,7 +50,9 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerIt
 
         holder.beerName.setText(beerItem.getName());
 
-        String beerImage = "";
+        int resource = getDrawableResource(position);
+
+        /*String beerImage = "";
         if (beerItem.getLabels() != null) {
             if (beerItem.getLabels().getMedium() != null) {
                 beerImage = beerItem.getLabels().getMedium();
@@ -58,16 +60,13 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerIt
 
             Picasso.with(mContext)
                     .load(beerImage)
-                    .error(R.drawable.container_1)
-                    .placeholder(R.drawable.container_1)
-                    .resize(200, 200)
-                    .centerCrop()
+                    .error(resource)
+                    .placeholder(resource)
                     .into(holder.beerImage);
             Log.d("image", beerImage);
-        } else {
-            int resource = position % 2 == 0 ? R.drawable.container_1 : R.drawable.container_2;
-            holder.beerImage.setImageResource(resource);
-        }
+        } else {*/
+            holder.beerImage.setBackgroundResource(resource);
+        //}
     }
 
     @Override
@@ -94,5 +93,45 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerIt
         public void onClick(View view) {
             Toast.makeText(view.getContext(), "Clicked Position = " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private int getDrawableResource(int position){
+        int resource = R.drawable.item_container_3;
+
+        while(position>10){
+            position = position - 10;
+        }
+
+        switch (position){
+            case 0:
+                resource = R.drawable.item_container_1;
+                break;
+            case 1:
+                resource = R.drawable.item_container_2;
+                break;
+            case 2:
+                resource = R.drawable.item_container_3;
+                break;
+            case 3:
+                resource = R.drawable.item_container_4;
+                break;
+            case 4:
+                resource = R.drawable.item_container_5;
+                break;
+            case 5:
+                resource = R.drawable.item_container_6;
+                break;
+            case 6:
+                resource = R.drawable.item_container_7;
+                break;
+            case 7:
+                resource = R.drawable.item_container_8;
+                break;
+            case 8:
+                resource = R.drawable.item_container_5;
+                break;
+        }
+
+        return resource;
     }
 }

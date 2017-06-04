@@ -2,6 +2,7 @@ package iamdilipkumar.com.beerography.ui.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -45,7 +46,7 @@ public class BeerListActivity extends AppCompatActivity {
     private void apiResponse(SelectedPage selectedPage) {
         mBeerList.setHasFixedSize(true);
 
-        StaggeredGridLayoutManager gaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
+        GridLayoutManager gaggeredGridLayoutManager = new GridLayoutManager(this,2);
         mBeerList.setLayoutManager(gaggeredGridLayoutManager);
 
         BeerListAdapter rcAdapter = new BeerListAdapter(BeerListActivity.this, selectedPage.getData());
