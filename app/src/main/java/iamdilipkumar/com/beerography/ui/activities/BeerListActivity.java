@@ -1,144 +1,58 @@
 package iamdilipkumar.com.beerography.ui.activities;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
 
-import iamdilipkumar.com.beerography.R;
-import iamdilipkumar.com.beerography.dummy.DummyContent;
-import iamdilipkumar.com.beerography.ui.activities.BeerDetailActivity;
-import iamdilipkumar.com.beerography.ui.fragments.BeerDetailFragment;
-
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * An activity representing a list of Beers. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link BeerDetailActivity} representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
- */
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import iamdilipkumar.com.beerography.R;
+import iamdilipkumar.com.beerography.adapters.BeerListAdapter;
+import iamdilipkumar.com.beerography.models.Datum;
+import iamdilipkumar.com.beerography.models.Labels;
+
 public class BeerListActivity extends AppCompatActivity {
 
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
-    private boolean mTwoPane;
+    @BindView(R.id.beer_list_recycler)
+    RecyclerView mBeerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beer_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
+        ButterKnife.bind(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        mBeerList.setHasFixedSize(true);
 
-        View recyclerView = findViewById(R.id.beer_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        StaggeredGridLayoutManager gaggeredGridLayoutManager = new StaggeredGridLayoutManager(3, 1);
+        mBeerList.setLayoutManager(gaggeredGridLayoutManager);
 
-        if (findViewById(R.id.beer_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
-            mTwoPane = true;
-        }
+        List<Datum> gaggeredList = getListItemData();
+
+        BeerListAdapter rcAdapter = new BeerListAdapter(BeerListActivity.this, gaggeredList);
+        mBeerList.setAdapter(rcAdapter);
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
-    }
+    private List<Datum> getListItemData() {
+        List<Datum> items = new ArrayList<>();
 
-    public class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
-
-        private final List<DummyContent.DummyItem> mValues;
-
-        public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items) {
-            mValues = items;
+        for (int i = 0; i < 12; i++) {
+            Datum item = new Datum();
+            item.setName("Beer " + i);
+            Labels label = new Labels();
+            label.setMedium("https://s3.amazonaws.com/brewerydbapi/beer/tmEthz/upload_3Jl1St-medium.png");
+            item.setLabels(label);
+            items.add(item);
         }
 
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.beer_list_content, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mItem = mValues.get(position);
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
-
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mTwoPane) {
-                        Bundle arguments = new Bundle();
-                        arguments.putString(BeerDetailFragment.ARG_ITEM_ID, holder.mItem.id);
-                        BeerDetailFragment fragment = new BeerDetailFragment();
-                        fragment.setArguments(arguments);
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.beer_detail_container, fragment)
-                                .commit();
-                    } else {
-                        Context context = v.getContext();
-                        Intent intent = new Intent(context, BeerDetailActivity.class);
-                        intent.putExtra(BeerDetailFragment.ARG_ITEM_ID, holder.mItem.id);
-
-                        context.startActivity(intent);
-                    }
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return mValues.size();
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
-            public final TextView mIdView;
-            public final TextView mContentView;
-            public DummyContent.DummyItem mItem;
-
-            public ViewHolder(View view) {
-                super(view);
-                mView = view;
-                mIdView = (TextView) view.findViewById(R.id.id);
-                mContentView = (TextView) view.findViewById(R.id.content);
-            }
-
-            @Override
-            public String toString() {
-                return super.toString() + " '" + mContentView.getText() + "'";
-            }
-        }
+        return items;
     }
 }

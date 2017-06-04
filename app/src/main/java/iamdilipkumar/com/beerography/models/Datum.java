@@ -21,12 +21,9 @@ public class Datum {
     @SerializedName("abv")
     @Expose
     private String abv;
-    @SerializedName("glasswareId")
+    @SerializedName("ibu")
     @Expose
-    private Integer glasswareId;
-    @SerializedName("srmId")
-    @Expose
-    private Integer srmId;
+    private String ibu;
     @SerializedName("styleId")
     @Expose
     private Integer styleId;
@@ -45,24 +42,12 @@ public class Datum {
     @SerializedName("updateDate")
     @Expose
     private String updateDate;
-    @SerializedName("glass")
-    @Expose
-    private Glass glass;
-    @SerializedName("srm")
-    @Expose
-    private Srm srm;
     @SerializedName("style")
     @Expose
     private Style style;
-    @SerializedName("ibu")
+    @SerializedName("labels")
     @Expose
-    private String ibu;
-    @SerializedName("availableId")
-    @Expose
-    private Integer availableId;
-    @SerializedName("available")
-    @Expose
-    private Available available;
+    private Labels labels;
 
     public String getId() {
         return id;
@@ -104,20 +89,12 @@ public class Datum {
         this.abv = abv;
     }
 
-    public Integer getGlasswareId() {
-        return glasswareId;
+    public String getIbu() {
+        return ibu;
     }
 
-    public void setGlasswareId(Integer glasswareId) {
-        this.glasswareId = glasswareId;
-    }
-
-    public Integer getSrmId() {
-        return srmId;
-    }
-
-    public void setSrmId(Integer srmId) {
-        this.srmId = srmId;
+    public void setIbu(String ibu) {
+        this.ibu = ibu;
     }
 
     public Integer getStyleId() {
@@ -168,22 +145,6 @@ public class Datum {
         this.updateDate = updateDate;
     }
 
-    public Glass getGlass() {
-        return glass;
-    }
-
-    public void setGlass(Glass glass) {
-        this.glass = glass;
-    }
-
-    public Srm getSrm() {
-        return srm;
-    }
-
-    public void setSrm(Srm srm) {
-        this.srm = srm;
-    }
-
     public Style getStyle() {
         return style;
     }
@@ -192,28 +153,12 @@ public class Datum {
         this.style = style;
     }
 
-    public String getIbu() {
-        return ibu;
+    public Labels getLabels() {
+        return labels;
     }
 
-    public void setIbu(String ibu) {
-        this.ibu = ibu;
-    }
-
-    public Integer getAvailableId() {
-        return availableId;
-    }
-
-    public void setAvailableId(Integer availableId) {
-        this.availableId = availableId;
-    }
-
-    public Available getAvailable() {
-        return available;
-    }
-
-    public void setAvailable(Available available) {
-        this.available = available;
+    public void setLabels(Labels labels) {
+        this.labels = labels;
     }
 
 }
