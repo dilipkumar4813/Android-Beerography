@@ -1,11 +1,12 @@
 package iamdilipkumar.com.beerography.ui.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,7 +19,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-public class BeerListActivity extends AppCompatActivity {
+public class BeerListActivity extends AppCompatActivity implements BeerListAdapter.BeerClick {
 
     private static final String TAG = BeerListActivity.class.getSimpleName();
 
@@ -46,10 +47,10 @@ public class BeerListActivity extends AppCompatActivity {
     private void apiResponse(SelectedPage selectedPage) {
         mBeerList.setHasFixedSize(true);
 
-        GridLayoutManager gaggeredGridLayoutManager = new GridLayoutManager(this,2);
+        GridLayoutManager gaggeredGridLayoutManager = new GridLayoutManager(this, 2);
         mBeerList.setLayoutManager(gaggeredGridLayoutManager);
 
-        BeerListAdapter rcAdapter = new BeerListAdapter(BeerListActivity.this, selectedPage.getData());
+        BeerListAdapter rcAdapter = new BeerListAdapter(BeerListActivity.this, selectedPage.getData(), this);
         mBeerList.setAdapter(rcAdapter);
     }
 
@@ -61,5 +62,11 @@ public class BeerListActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mCompositeDisposable.clear();
+    }
+
+    @Override
+    public void onBeerItemClicked(int position) {
+        startActivity(new Intent(BeerListActivity.this, BeerDetailActivity.class));
+        Toast.makeText(BeerListActivity.this, "Clicked Position = " + position, Toast.LENGTH_SHORT).show();
     }
 }

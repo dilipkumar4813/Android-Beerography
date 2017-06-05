@@ -1,6 +1,7 @@
 package iamdilipkumar.com.beerography.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import iamdilipkumar.com.beerography.R;
 import iamdilipkumar.com.beerography.models.Datum;
+import iamdilipkumar.com.beerography.ui.activities.BeerDetailActivity;
 
 /**
  * Created on 04/06/17.
@@ -30,10 +32,15 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerIt
 
     private List<Datum> beerList;
     private Context mContext;
+    private BeerClick mBeerClick;
 
-    public BeerListAdapter(Context context, List<Datum> itemList) {
+    public BeerListAdapter(Context context, List<Datum> itemList, BeerClick beerClick) {
         this.beerList = itemList;
         this.mContext = context;
+    }
+
+    public interface BeerClick{
+        void onBeerItemClicked(int position);
     }
 
     @Override
@@ -65,7 +72,7 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerIt
                     .into(holder.beerImage);
             Log.d("image", beerImage);
         } else {*/
-            holder.beerImage.setBackgroundResource(resource);
+        holder.beerImage.setBackgroundResource(resource);
         //}
     }
 
@@ -91,18 +98,18 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerIt
 
         @Override
         public void onClick(View view) {
-            Toast.makeText(view.getContext(), "Clicked Position = " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
+            mBeerClick.onBeerItemClicked(getAdapterPosition());
         }
     }
 
-    private int getDrawableResource(int position){
+    private int getDrawableResource(int position) {
         int resource = R.drawable.item_container_3;
 
-        while(position>10){
+        while (position > 10) {
             position = position - 10;
         }
 
-        switch (position){
+        switch (position) {
             case 0:
                 resource = R.drawable.item_container_1;
                 break;
