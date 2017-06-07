@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,6 +66,5 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     @Override
     public void onBeerItemClicked(int position) {
         startActivity(new Intent(BeerListActivity.this, BeerDetailActivity.class));
-        Toast.makeText(BeerListActivity.this, "Clicked Position = " + position, Toast.LENGTH_SHORT).show();
     }
 }

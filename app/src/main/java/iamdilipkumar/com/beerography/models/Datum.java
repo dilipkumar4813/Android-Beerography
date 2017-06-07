@@ -9,45 +9,74 @@ public class Datum {
     @SerializedName("id")
     @Expose
     private String id;
+
     @SerializedName("name")
     @Expose
     private String name;
+
     @SerializedName("nameDisplay")
     @Expose
     private String nameDisplay;
+
     @SerializedName("description")
     @Expose
     private String description;
+
     @SerializedName("abv")
     @Expose
     private String abv;
+
     @SerializedName("ibu")
     @Expose
     private String ibu;
+
+    @SerializedName("glasswareId")
+    @Expose
+    private Integer glasswareId;
+
+    @SerializedName("availableId")
+    @Expose
+    private Integer availableId;
+
     @SerializedName("styleId")
     @Expose
     private Integer styleId;
+
     @SerializedName("isOrganic")
     @Expose
     private String isOrganic;
-    @SerializedName("status")
-    @Expose
-    private String status;
-    @SerializedName("statusDisplay")
-    @Expose
-    private String statusDisplay;
-    @SerializedName("createDate")
-    @Expose
-    private String createDate;
-    @SerializedName("updateDate")
-    @Expose
-    private String updateDate;
-    @SerializedName("style")
-    @Expose
-    private Style style;
+
     @SerializedName("labels")
     @Expose
     private Labels labels;
+
+    @SerializedName("status")
+    @Expose
+    private String status;
+
+    @SerializedName("statusDisplay")
+    @Expose
+    private String statusDisplay;
+
+    @SerializedName("createDate")
+    @Expose
+    private String createDate;
+
+    @SerializedName("updateDate")
+    @Expose
+    private String updateDate;
+
+    @SerializedName("glass")
+    @Expose
+    private Glass glass;
+
+    @SerializedName("available")
+    @Expose
+    private Available available;
+
+    @SerializedName("style")
+    @Expose
+    private Style style;
 
     public String getId() {
         return id;
@@ -97,6 +126,22 @@ public class Datum {
         this.ibu = ibu;
     }
 
+    public Integer getGlasswareId() {
+        return glasswareId;
+    }
+
+    public void setGlasswareId(Integer glasswareId) {
+        this.glasswareId = glasswareId;
+    }
+
+    public Integer getAvailableId() {
+        return availableId;
+    }
+
+    public void setAvailableId(Integer availableId) {
+        this.availableId = availableId;
+    }
+
     public Integer getStyleId() {
         return styleId;
     }
@@ -111,6 +156,14 @@ public class Datum {
 
     public void setIsOrganic(String isOrganic) {
         this.isOrganic = isOrganic;
+    }
+
+    public Labels getLabels() {
+        return labels;
+    }
+
+    public void setLabels(Labels labels) {
+        this.labels = labels;
     }
 
     public String getStatus() {
@@ -145,20 +198,28 @@ public class Datum {
         this.updateDate = updateDate;
     }
 
+    public Glass getGlass() {
+        return glass;
+    }
+
+    public void setGlass(Glass glass) {
+        this.glass = glass;
+    }
+
+    public Available getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Available available) {
+        this.available = available;
+    }
+
     public Style getStyle() {
         return style;
     }
 
     public void setStyle(Style style) {
         this.style = style;
-    }
-
-    public Labels getLabels() {
-        return labels;
-    }
-
-    public void setLabels(Labels labels) {
-        this.labels = labels;
     }
 
 }

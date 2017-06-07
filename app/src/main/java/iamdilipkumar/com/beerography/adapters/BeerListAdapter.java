@@ -37,6 +37,7 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerIt
     public BeerListAdapter(Context context, List<Datum> itemList, BeerClick beerClick) {
         this.beerList = itemList;
         this.mContext = context;
+        this.mBeerClick = beerClick;
     }
 
     public interface BeerClick{
