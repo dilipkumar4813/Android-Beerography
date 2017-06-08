@@ -68,7 +68,7 @@ public class CommonUtils {
 
         if (shortName != null) {
             if (!shortName.isEmpty()) {
-                styleInfo += context.getString(R.string.style_name) + "\n" + shortName + "\n\n";
+                styleInfo += context.getString(R.string.style_short_name) + "\n" + shortName + "\n\n";
             }
         }
 

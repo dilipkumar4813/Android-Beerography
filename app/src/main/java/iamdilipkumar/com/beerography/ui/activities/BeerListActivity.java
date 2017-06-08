@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import butterknife.BindView;
@@ -31,6 +32,10 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beer_list);
+
+        Toolbar actionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
+        actionBarToolbar.setTitle(getString(R.string.app_name));
+        setSupportActionBar(actionBarToolbar);
 
         mCompositeDisposable = new CompositeDisposable();
         ButterKnife.bind(this);
