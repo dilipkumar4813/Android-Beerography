@@ -8,7 +8,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import java.util.List;
 
@@ -32,6 +34,9 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
 
     @BindView(R.id.beer_list_recycler)
     RecyclerView mBeerList;
+
+    @BindView(R.id.loading_layout)
+    LinearLayout loadingLayout;
 
     CompositeDisposable mCompositeDisposable;
     private List<Datum> mList;
@@ -57,6 +62,8 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     }
 
     private void apiResponse(SelectedPage selectedPage) {
+        loadingLayout.setVisibility(View.GONE);
+
         mBeerList.setHasFixedSize(true);
 
         GridLayoutManager gaggeredGridLayoutManager = new GridLayoutManager(this, 2);
@@ -68,6 +75,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     }
 
     private void apiError(Throwable throwable) {
+        loadingLayout.setVisibility(View.GONE);
         Log.d(TAG, throwable.getLocalizedMessage());
     }
 
