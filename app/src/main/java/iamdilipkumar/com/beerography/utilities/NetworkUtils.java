@@ -23,7 +23,7 @@ public class NetworkUtils {
 
     /**
      * Method to create a new Retrofit instance
-     * Add the API key {@link BeersApiInterface#getBeers(String)}
+     * Add the API key {@link BeersApiInterface#getBeersList(int)}
      * Show debug information only in DEBUG build
      *
      * @return Retrofit - used for building API calls

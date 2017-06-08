@@ -37,6 +37,9 @@ public class BeerDetailActivity extends AppCompatActivity {
 
     private static final String TAG = BeerDetailActivity.class.getSimpleName();
 
+    public static final String BEER_ID = "beerid";
+    private String mBeerId;
+
     CompositeDisposable mCompositeDisposable;
     CollapsingToolbarLayout mCollapsingToolbarLayout;
 
@@ -58,6 +61,9 @@ public class BeerDetailActivity extends AppCompatActivity {
     @BindView(R.id.iv_beer_poster)
     ImageView mBeerPoster;
 
+    @BindView(R.id.beer_image)
+    ImageView mBeerBanner;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,11 +77,16 @@ public class BeerDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         mCollapsingToolbarLayout.setTitle("Beer Details");
 
+        int position = getIntent().getIntExtra(BeerListActivity.GRID_POSITION, 0);
+        mBeerId = getIntent().getStringExtra(BEER_ID); //"oeGSxs"
+        int bannerResource = CommonUtils.getBeerImageDrawable(position);
+        mBeerBanner.setImageResource(bannerResource);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         BeersApiInterface moviesInterface = NetworkUtils.buildRetrofit().create(BeersApiInterface.class);
 
-        mCompositeDisposable.add(moviesInterface.getBeerDetails("oeGSxs")
+        mCompositeDisposable.add(moviesInterface.getBeerDetails(mBeerId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(this::apiResponse, this::apiError));
@@ -116,8 +127,8 @@ public class BeerDetailActivity extends AppCompatActivity {
                 if (mediumUrl != null) {
                     Picasso.with(this)
                             .load(mediumUrl)
-                            .error(R.drawable.ic_image_black_24dp)
-                            .placeholder(R.drawable.ic_image_black_24dp)
+                            .error(R.drawable.no_image)
+                            .placeholder(R.drawable.no_image)
                             .into(mBeerPoster);
                 }
             }

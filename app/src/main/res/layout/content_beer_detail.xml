@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@android:color/white"
     android:padding="16dp">
 
     <LinearLayout
@@ -54,7 +55,7 @@
                 android:layout_height="120dp"
                 android:contentDescription="@string/app_name"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_image_black_24dp" />
+                android:src="@drawable/no_image" />
         </RelativeLayout>
 
         <TextView
@@ -77,10 +78,10 @@
         android:id="@+id/tv_beer_style_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textStyle="bold"
         android:layout_marginTop="@dimen/keyline_1"
-        android:text="@string/beer_style" />
+        android:text="@string/beer_style"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_beer_style"

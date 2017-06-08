@@ -58,26 +58,59 @@ public class CommonUtils {
 
         Style style = data.getStyle();
         String name = style.getName();
-        String shortName = style.getName();
         String description = style.getDescription();
         if (name != null) {
             if (!name.isEmpty()) {
-                styleInfo += context.getString(R.string.style_name) + "\n" + name + "\n\n";
-            }
-        }
-
-        if (shortName != null) {
-            if (!shortName.isEmpty()) {
-                styleInfo += context.getString(R.string.style_short_name) + "\n" + shortName + "\n\n";
+                styleInfo += name + "\n\n";
             }
         }
 
         if (description != null) {
             if (!description.isEmpty()) {
-                styleInfo += context.getString(R.string.style_description) + "\n" + description;
+                styleInfo += description;
             }
         }
 
         return styleInfo;
+    }
+
+    public static int getBeerImageDrawable(int position) {
+        int resource = R.drawable.item_container_3;
+
+        while (position > 10) {
+            position = position - 10;
+        }
+
+        switch (position) {
+            case 0:
+                resource = R.drawable.item_container_1;
+                break;
+            case 1:
+                resource = R.drawable.item_container_2;
+                break;
+            case 2:
+                resource = R.drawable.item_container_3;
+                break;
+            case 3:
+                resource = R.drawable.item_container_4;
+                break;
+            case 4:
+                resource = R.drawable.item_container_5;
+                break;
+            case 5:
+                resource = R.drawable.item_container_6;
+                break;
+            case 6:
+                resource = R.drawable.item_container_7;
+                break;
+            case 7:
+                resource = R.drawable.item_container_8;
+                break;
+            case 8:
+                resource = R.drawable.item_container_5;
+                break;
+        }
+
+        return resource;
     }
 }

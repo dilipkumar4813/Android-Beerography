@@ -14,6 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import iamdilipkumar.com.beerography.R;
 import iamdilipkumar.com.beerography.models.Datum;
+import iamdilipkumar.com.beerography.utilities.CommonUtils;
 
 /**
  * Created on 04/06/17.
@@ -50,7 +51,7 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerIt
 
         Datum beerItem = beerList.get(position);
         holder.beerName.setText(beerItem.getName());
-        int resource = getDrawableResource(position);
+        int resource = CommonUtils.getBeerImageDrawable(position);
 
         /*String beerImage = "";
         if (beerItem.getLabels() != null) {
@@ -95,45 +96,5 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerIt
         public void onClick(View view) {
             mBeerClick.onBeerItemClicked(getAdapterPosition(),beerImage);
         }
-    }
-
-    private int getDrawableResource(int position) {
-        int resource = R.drawable.item_container_3;
-
-        while (position > 10) {
-            position = position - 10;
-        }
-
-        switch (position) {
-            case 0:
-                resource = R.drawable.item_container_1;
-                break;
-            case 1:
-                resource = R.drawable.item_container_2;
-                break;
-            case 2:
-                resource = R.drawable.item_container_3;
-                break;
-            case 3:
-                resource = R.drawable.item_container_4;
-                break;
-            case 4:
-                resource = R.drawable.item_container_5;
-                break;
-            case 5:
-                resource = R.drawable.item_container_6;
-                break;
-            case 6:
-                resource = R.drawable.item_container_7;
-                break;
-            case 7:
-                resource = R.drawable.item_container_8;
-                break;
-            case 8:
-                resource = R.drawable.item_container_5;
-                break;
-        }
-
-        return resource;
     }
 }

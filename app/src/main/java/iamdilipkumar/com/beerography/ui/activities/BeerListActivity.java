@@ -10,10 +10,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ImageView;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import iamdilipkumar.com.beerography.R;
 import iamdilipkumar.com.beerography.adapters.BeerListAdapter;
+import iamdilipkumar.com.beerography.models.Datum;
 import iamdilipkumar.com.beerography.models.SelectedPage;
 import iamdilipkumar.com.beerography.utilities.BeersApiInterface;
 import iamdilipkumar.com.beerography.utilities.NetworkUtils;
@@ -25,10 +28,13 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
 
     private static final String TAG = BeerListActivity.class.getSimpleName();
 
+    public static final String GRID_POSITION = "gridPosition";
+
     @BindView(R.id.beer_list_recycler)
     RecyclerView mBeerList;
 
     CompositeDisposable mCompositeDisposable;
+    private List<Datum> mList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +62,8 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         GridLayoutManager gaggeredGridLayoutManager = new GridLayoutManager(this, 2);
         mBeerList.setLayoutManager(gaggeredGridLayoutManager);
 
-        BeerListAdapter rcAdapter = new BeerListAdapter(BeerListActivity.this, selectedPage.getData(), this);
+        mList = selectedPage.getData();
+        BeerListAdapter rcAdapter = new BeerListAdapter(BeerListActivity.this, mList, this);
         mBeerList.setAdapter(rcAdapter);
     }
 
@@ -73,11 +80,15 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     @Override
     public void onBeerItemClicked(int position, ImageView transitionImage) {
         Intent detailsIntent = new Intent(BeerListActivity.this, BeerDetailActivity.class);
+        detailsIntent.putExtra(GRID_POSITION, position);
+        detailsIntent.putExtra(BeerDetailActivity.BEER_ID, mList.get(position).getId());
         Bundle bundle = new Bundle();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            bundle = ActivityOptions.makeSceneTransitionAnimation(this,
-                    transitionImage,
-                    transitionImage.getTransitionName()).toBundle();
+            bundle = ActivityOptions
+                    .makeSceneTransitionAnimation(this,
+                            transitionImage,
+                            transitionImage.getTransitionName())
+                    .toBundle();
         }
         startActivity(detailsIntent, bundle);
     }
