@@ -49,6 +49,9 @@ public class BeerDetailActivity extends AppCompatActivity {
     @BindView(R.id.tv_extra_info)
     TextView mExtraInfo;
 
+    @BindView(R.id.tv_beer_style)
+    TextView mStyleInfo;
+
     @BindView(R.id.loading_layout)
     LinearLayout mLoading;
 
@@ -113,8 +116,14 @@ public class BeerDetailActivity extends AppCompatActivity {
                 mDescription.setText(description);
             }
 
-            String extraInfo = CommonUtils.buildExtraInfo(this,data);
+            String extraInfo = CommonUtils.getExtraInfo(this, data);
             mExtraInfo.setText(extraInfo);
+
+            String styleInfo = CommonUtils.getStyleInfo(this, data);
+            if (!styleInfo.isEmpty()) {
+                mStyleInfo.setVisibility(View.VISIBLE);
+                mStyleInfo.setText(styleInfo);
+            }
 
             if (data.getLabels() != null) {
                 String mediumUrl = data.getLabels().getMedium();

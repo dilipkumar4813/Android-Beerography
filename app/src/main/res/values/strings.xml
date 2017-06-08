@@ -11,4 +11,7 @@
     <string name="ibu">IBU:</string>
     <string name="organic">Organic:</string>
     <string name="available">Availability:</string>
+    <string name="style_name">Name:</string>
+    <string name="style_short_name">Short Name:</string>
+    <string name="style_description">Description:</string>
 </resources>

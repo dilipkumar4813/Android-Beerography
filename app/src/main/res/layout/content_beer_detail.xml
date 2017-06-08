@@ -71,4 +71,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/keyline2"
         android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_beer_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/keyline2"
+        android:visibility="gone" />
 </LinearLayout>

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import iamdilipkumar.com.beerography.R;
 import iamdilipkumar.com.beerography.models.Datum;
+import iamdilipkumar.com.beerography.models.Style;
 
 /**
  * Created on 08/06/17.
@@ -14,7 +15,7 @@ import iamdilipkumar.com.beerography.models.Datum;
 
 public class CommonUtils {
 
-    public static String buildExtraInfo(Context context, Datum data) {
+    public static String getExtraInfo(Context context, Datum data) {
         String extraInfo = "";
 
         if (data.getAbv() != null) {
@@ -50,5 +51,33 @@ public class CommonUtils {
         }
 
         return extraInfo;
+    }
+
+    public static String getStyleInfo(Context context, Datum data) {
+        String styleInfo = "";
+
+        Style style = data.getStyle();
+        String name = style.getName();
+        String shortName = style.getName();
+        String description = style.getDescription();
+        if (name != null) {
+            if (!name.isEmpty()) {
+                styleInfo += context.getString(R.string.style_name) + "\n" + name + "\n\n";
+            }
+        }
+
+        if (shortName != null) {
+            if (!shortName.isEmpty()) {
+                styleInfo += context.getString(R.string.style_name) + "\n" + shortName + "\n\n";
+            }
+        }
+
+        if (description != null) {
+            if (!description.isEmpty()) {
+                styleInfo += context.getString(R.string.style_description) + "\n" + description;
+            }
+        }
+
+        return styleInfo;
     }
 }
