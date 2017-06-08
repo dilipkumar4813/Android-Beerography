@@ -92,11 +92,11 @@ public class BeerDetailActivity extends AppCompatActivity {
     }
 
     private void apiResponse(BeerDetail beerDetail) {
+        mLoading.setVisibility(View.GONE);
 
         Datum data = beerDetail.getData();
 
         if (data != null) {
-            mLoading.setVisibility(View.GONE);
 
             String name = data.getName();
             String displayName = data.getNameDisplay();
@@ -111,20 +111,6 @@ public class BeerDetailActivity extends AppCompatActivity {
                 mTitle.setText(displayName);
             }
 
-            if (description != null) {
-                mDescription.setVisibility(View.VISIBLE);
-                mDescription.setText(description);
-            }
-
-            String extraInfo = CommonUtils.getExtraInfo(this, data);
-            mExtraInfo.setText(extraInfo);
-
-            String styleInfo = CommonUtils.getStyleInfo(this, data);
-            if (!styleInfo.isEmpty()) {
-                mStyleInfo.setVisibility(View.VISIBLE);
-                mStyleInfo.setText(styleInfo);
-            }
-
             if (data.getLabels() != null) {
                 String mediumUrl = data.getLabels().getMedium();
                 if (mediumUrl != null) {
@@ -136,10 +122,31 @@ public class BeerDetailActivity extends AppCompatActivity {
                 }
             }
 
+            String extraInfo = CommonUtils.getExtraInfo(this, data);
+            if (!extraInfo.isEmpty()) {
+                mExtraInfo.setText(extraInfo);
+            } else {
+                mExtraInfo.setText(getString(R.string.extras_empty));
+            }
+
+            if (description != null) {
+                if (!description.isEmpty()) {
+                    mDescription.setVisibility(View.VISIBLE);
+                    mDescription.setText(description);
+                }
+            }
+
+            String styleInfo = CommonUtils.getStyleInfo(this, data);
+            if (!styleInfo.isEmpty()) {
+                mStyleInfo.setVisibility(View.VISIBLE);
+                mStyleInfo.setText(styleInfo);
+            }
+
         }
     }
 
     private void apiError(Throwable throwable) {
+        mLoading.setVisibility(View.GONE);
         Log.d(TAG, throwable.getLocalizedMessage());
     }
 

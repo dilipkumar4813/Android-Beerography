@@ -1,17 +1,12 @@
 package iamdilipkumar.com.beerography.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -19,7 +14,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import iamdilipkumar.com.beerography.R;
 import iamdilipkumar.com.beerography.models.Datum;
-import iamdilipkumar.com.beerography.ui.activities.BeerDetailActivity;
 
 /**
  * Created on 04/06/17.
@@ -41,7 +35,7 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerIt
     }
 
     public interface BeerClick{
-        void onBeerItemClicked(int position);
+        void onBeerItemClicked(int position,ImageView transistionImage);
     }
 
     @Override
@@ -55,9 +49,7 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerIt
     public void onBindViewHolder(BeerItemViewHolder holder, int position) {
 
         Datum beerItem = beerList.get(position);
-
         holder.beerName.setText(beerItem.getName());
-
         int resource = getDrawableResource(position);
 
         /*String beerImage = "";
@@ -91,7 +83,9 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerIt
         @BindView(R.id.tv_beer_name)
         TextView beerName;
 
-        public BeerItemViewHolder(View itemView) {
+        View view;
+
+        BeerItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
@@ -99,7 +93,7 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerIt
 
         @Override
         public void onClick(View view) {
-            mBeerClick.onBeerItemClicked(getAdapterPosition());
+            mBeerClick.onBeerItemClicked(getAdapterPosition(),beerImage);
         }
     }
 

@@ -1,12 +1,11 @@
 <resources>
     <string name="app_name">Beerography</string>
     <string name="title_beer_detail">Beer Detail</string>
-
     <string name="splash_button">Let\'s get some beers</string>
-
     <string name="loading_data">Contacting our drunk guy for details\nHang on</string>
 
     <!--Beer details-->
+    <string name="extras_empty">Woow, no details available at the time.</string>
     <string name="abv">ABV:</string>
     <string name="ibu">IBU:</string>
     <string name="organic">Organic:</string>
@@ -15,4 +14,7 @@
     <string name="style_name">Name:</string>
     <string name="style_short_name">Short Name:</string>
     <string name="style_description">Description:</string>
+
+    <!--Animation strings-->
+    <string name="main_list_item_transition_name" translatable="false">beeritem</string>
 </resources>

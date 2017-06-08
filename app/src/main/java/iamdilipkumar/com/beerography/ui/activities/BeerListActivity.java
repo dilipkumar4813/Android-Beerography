@@ -1,5 +1,6 @@
 package iamdilipkumar.com.beerography.ui.activities;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.ImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,7 +71,14 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     }
 
     @Override
-    public void onBeerItemClicked(int position) {
-        startActivity(new Intent(BeerListActivity.this, BeerDetailActivity.class));
+    public void onBeerItemClicked(int position, ImageView transitionImage) {
+        Intent detailsIntent = new Intent(BeerListActivity.this, BeerDetailActivity.class);
+        Bundle bundle = new Bundle();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            bundle = ActivityOptions.makeSceneTransitionAnimation(this,
+                    transitionImage,
+                    transitionImage.getTransitionName()).toBundle();
+        }
+        startActivity(detailsIntent, bundle);
     }
 }
