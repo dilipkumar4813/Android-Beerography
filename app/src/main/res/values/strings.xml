@@ -5,4 +5,10 @@
     <string name="splash_button">Let\'s get some beers</string>
 
     <string name="loading_data">Contacting our drunk guy for details\nHang on</string>
+
+    <!--Beer details-->
+    <string name="abv">ABV:</string>
+    <string name="ibu">IBU:</string>
+    <string name="organic">Organic:</string>
+    <string name="available">Availability:</string>
 </resources>

@@ -20,6 +20,7 @@ import iamdilipkumar.com.beerography.R;
 import iamdilipkumar.com.beerography.models.BeerDetail;
 import iamdilipkumar.com.beerography.models.Datum;
 import iamdilipkumar.com.beerography.utilities.BeersApiInterface;
+import iamdilipkumar.com.beerography.utilities.CommonUtils;
 import iamdilipkumar.com.beerography.utilities.NetworkUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -112,25 +113,7 @@ public class BeerDetailActivity extends AppCompatActivity {
                 mDescription.setText(description);
             }
 
-            String extraInfo = "";
-
-            if (data.getAbv() != null) {
-                extraInfo += "ABV: " + data.getAbv() + "\n";
-            }
-
-            if (data.getIbu() != null) {
-                extraInfo += "IBU: " + data.getIbu() + "\n";
-            }
-
-            if (data.getIsOrganic() != null) {
-                extraInfo += "Organic: " + data.getIsOrganic() + "\n\n";
-            }
-
-            if (data.getAvailable() != null) {
-                extraInfo += "Availability: " + data.getAvailable().getName() + "\n";
-                extraInfo += data.getAvailable().getDescription() + "\n";
-            }
-
+            String extraInfo = CommonUtils.buildExtraInfo(this,data);
             mExtraInfo.setText(extraInfo);
 
             if (data.getLabels() != null) {
