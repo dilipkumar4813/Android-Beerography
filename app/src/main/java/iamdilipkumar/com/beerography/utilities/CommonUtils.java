@@ -1,6 +1,14 @@
 package iamdilipkumar.com.beerography.utilities;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.TextView;
 
 import iamdilipkumar.com.beerography.R;
 import iamdilipkumar.com.beerography.models.Datum;
@@ -112,5 +120,43 @@ public class CommonUtils {
         }
 
         return resource;
+    }
+
+    public static boolean checkNetworkConnectivity(Context context) {
+        boolean networkAvailable = false;
+
+        ConnectivityManager conMgr = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (conMgr.getActiveNetworkInfo() != null
+                && conMgr.getActiveNetworkInfo().isAvailable()
+                && conMgr.getActiveNetworkInfo().isConnected()) {
+            networkAvailable = true;
+        }
+
+        return networkAvailable;
+    }
+
+    public static Dialog buildTwoButtonDialog(Activity activity) {
+        final Dialog twoButtonDialog = new Dialog(activity);
+        twoButtonDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        twoButtonDialog.setContentView(R.layout.dialog_two_button);
+        twoButtonDialog.setCanceledOnTouchOutside(false);
+
+        return twoButtonDialog;
+    }
+
+    public static Dialog noNetworkDialog(Activity activity) {
+        final Dialog networkDialog = buildTwoButtonDialog(activity);
+
+        Button btnCancel = (Button) networkDialog.findViewById(R.id.btn_no);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                networkDialog.dismiss();
+            }
+        });
+
+        return networkDialog;
     }
 }

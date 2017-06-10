@@ -15,6 +15,9 @@
     <string name="style_short_name">Short Name:</string>
     <string name="description">Description</string>
 
+    <string name="no_network_title">No network</string>
+    <string name="no_network">Whoops, no Internet. Would you like to connect to Internet?</string>
+
     <!--Animation strings-->
     <string name="main_list_item_transition_name" translatable="false">beeritem</string>
 </resources>

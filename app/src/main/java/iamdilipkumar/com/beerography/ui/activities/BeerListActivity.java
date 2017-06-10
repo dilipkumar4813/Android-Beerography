@@ -1,7 +1,9 @@
 package iamdilipkumar.com.beerography.ui.activities;
 
 import android.app.ActivityOptions;
+import android.app.Dialog;
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -23,6 +26,7 @@ import iamdilipkumar.com.beerography.adapters.BeerListAdapter;
 import iamdilipkumar.com.beerography.models.Datum;
 import iamdilipkumar.com.beerography.models.SelectedPage;
 import iamdilipkumar.com.beerography.utilities.BeersApiInterface;
+import iamdilipkumar.com.beerography.utilities.CommonUtils;
 import iamdilipkumar.com.beerography.utilities.NetworkUtils;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -146,20 +150,35 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
 
     @Override
     public void onBeerItemClicked(int position, ImageView transitionImage) {
-        Intent detailsIntent = new Intent(BeerListActivity.this, BeerDetailActivity.class);
-        detailsIntent.putExtra(GRID_POSITION, position);
-        detailsIntent.putExtra(BeerDetailActivity.BEER_ID, mList.get(position).getId());
-        Bundle bundle = new Bundle();
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            if (!getResources().getBoolean(R.bool.isTablet)) {
-                bundle = ActivityOptions
-                        .makeSceneTransitionAnimation(this,
-                                transitionImage,
-                                transitionImage.getTransitionName())
-                        .toBundle();
+        if (CommonUtils.checkNetworkConnectivity(this)) {
+            Intent detailsIntent = new Intent(BeerListActivity.this, BeerDetailActivity.class);
+            detailsIntent.putExtra(GRID_POSITION, position);
+            detailsIntent.putExtra(BeerDetailActivity.BEER_ID, mList.get(position).getId());
+            Bundle bundle = new Bundle();
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                if (!getResources().getBoolean(R.bool.isTablet)) {
+                    bundle = ActivityOptions
+                            .makeSceneTransitionAnimation(this,
+                                    transitionImage,
+                                    transitionImage.getTransitionName())
+                            .toBundle();
+                }
             }
+            startActivity(detailsIntent, bundle);
+        }else{
+            Dialog network = CommonUtils.noNetworkDialog(this);
+
+            Button btnYes = (Button) network.findViewById(R.id.btn_yes);
+            btnYes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    network.dismiss();
+                    startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                }
+            });
+
+            network.show();
         }
-        startActivity(detailsIntent, bundle);
     }
 
     @Override
