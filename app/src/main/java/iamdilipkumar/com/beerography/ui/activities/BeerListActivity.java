@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -38,8 +40,16 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     @BindView(R.id.loading_layout)
     LinearLayout loadingLayout;
 
+    @BindView(R.id.progress_load_more)
+    ProgressBar loadMore;
+
     CompositeDisposable mCompositeDisposable;
-    private List<Datum> mList;
+    private List<Datum> mList = new ArrayList<>();
+    private GridLayoutManager mGridLayoutManager;
+    private int mPageCount = 1;
+    private boolean loading = true;
+    private BeerListAdapter mAdapter;
+    int mScrollToPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +63,42 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         mCompositeDisposable = new CompositeDisposable();
         ButterKnife.bind(this);
 
+        mBeerList.setHasFixedSize(true);
+        mGridLayoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns));
+        mBeerList.setLayoutManager(mGridLayoutManager);
+        mAdapter = new BeerListAdapter(BeerListActivity.this, mList, this);
+
+        if(savedInstanceState==null){
+            loadBeers();
+        }
+
+        mBeerList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    int visibleItemCount = mGridLayoutManager.getChildCount();
+                    int pastVisiblesItems = mGridLayoutManager.findFirstVisibleItemPosition();
+                    mScrollToPosition = visibleItemCount+pastVisiblesItems;
+
+                    int totalItemCount = mGridLayoutManager.getItemCount();
+
+                    if (loading) {
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                            loadMore.setVisibility(View.VISIBLE);
+                            loading = false;
+                            mPageCount++;
+                            loadBeers();
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void loadBeers() {
         BeersApiInterface moviesInterface = NetworkUtils.buildRetrofit().create(BeersApiInterface.class);
 
-        mCompositeDisposable.add(moviesInterface.getBeersList(1)
+        mCompositeDisposable.add(moviesInterface.getBeersList(mPageCount)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(this::apiResponse, this::apiError));
@@ -64,19 +107,25 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     private void apiResponse(SelectedPage selectedPage) {
         loadingLayout.setVisibility(View.GONE);
 
-        mBeerList.setHasFixedSize(true);
+        if(loadMore.getVisibility()==View.VISIBLE){
+            mBeerList.scrollToPosition(mScrollToPosition);
+            //mBeerList.smoothScrollToPosition(mScrollToPosition);
+        }
+        loadMore.setVisibility(View.GONE);
 
-        GridLayoutManager gaggeredGridLayoutManager = new GridLayoutManager(this, 2);
-        mBeerList.setLayoutManager(gaggeredGridLayoutManager);
+        mList.addAll(selectedPage.getData());
+        mBeerList.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
 
-        mList = selectedPage.getData();
-        BeerListAdapter rcAdapter = new BeerListAdapter(BeerListActivity.this, mList, this);
-        mBeerList.setAdapter(rcAdapter);
+        loading = true;
     }
 
     private void apiError(Throwable throwable) {
         loadingLayout.setVisibility(View.GONE);
+        loadMore.setVisibility(View.GONE);
+
         Log.d(TAG, throwable.getLocalizedMessage());
+        loading = true;
     }
 
     @Override
