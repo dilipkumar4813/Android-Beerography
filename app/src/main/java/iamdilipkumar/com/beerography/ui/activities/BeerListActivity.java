@@ -151,11 +151,13 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         detailsIntent.putExtra(BeerDetailActivity.BEER_ID, mList.get(position).getId());
         Bundle bundle = new Bundle();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            bundle = ActivityOptions
-                    .makeSceneTransitionAnimation(this,
-                            transitionImage,
-                            transitionImage.getTransitionName())
-                    .toBundle();
+            if (!getResources().getBoolean(R.bool.isTablet)) {
+                bundle = ActivityOptions
+                        .makeSceneTransitionAnimation(this,
+                                transitionImage,
+                                transitionImage.getTransitionName())
+                        .toBundle();
+            }
         }
         startActivity(detailsIntent, bundle);
     }

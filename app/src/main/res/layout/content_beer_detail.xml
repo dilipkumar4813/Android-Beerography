@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/keyline_2"
             android:gravity="center"
+            android:textSize="@dimen/body_text"
             android:text="@string/loading_data"
             android:textStyle="bold" />
     </LinearLayout>
@@ -58,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/keyline_2"
             android:layout_marginStart="@dimen/keyline_2"
+            android:textSize="@dimen/body_text"
             android:layout_weight="1" />
     </LinearLayout>
 
@@ -77,6 +79,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/keyline_2"
+        android:textSize="@dimen/body_text"
         android:visibility="gone" />
 
     <TextView
@@ -95,5 +98,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/keyline_2"
+        android:textSize="@dimen/body_text"
         android:visibility="gone" />
 </LinearLayout>

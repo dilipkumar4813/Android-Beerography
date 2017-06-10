@@ -94,6 +94,10 @@ public class BeerDetailActivity extends AppCompatActivity {
         int bannerResource = CommonUtils.getBeerImageDrawable(position);
         mBeerBanner.setImageResource(bannerResource);
 
+        if(getResources().getBoolean(R.bool.isTablet)){
+            mBeerBanner.setImageResource(R.drawable.splash);
+        }
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
