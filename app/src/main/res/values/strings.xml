@@ -13,7 +13,7 @@
     <string name="beer_style">Style</string>
     <string name="style_name">Name:</string>
     <string name="style_short_name">Short Name:</string>
-    <string name="style_description">Description:</string>
+    <string name="description">Description</string>
 
     <!--Animation strings-->
     <string name="main_list_item_transition_name" translatable="false">beeritem</string>

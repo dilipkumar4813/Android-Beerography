@@ -7,6 +7,6 @@
     <!--Yellow gradients
     #CDDC39
     #AFB42B-->
-
+    <color name="fontHeading">#878787</color>
     <color name="black_overlay">#66000000</color>
 </resources>

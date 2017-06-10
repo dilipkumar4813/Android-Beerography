@@ -38,7 +38,11 @@ public class BeerDetailActivity extends AppCompatActivity {
     private static final String TAG = BeerDetailActivity.class.getSimpleName();
 
     public static final String BEER_ID = "beerid";
-    private String mBeerId;
+    public static final String BEER_STYLE = "beerStyle";
+    public static final String BEER_EXTRAS = "beerExtras";
+    public static final String BEER_TITLE = "beerTitle";
+    public static final String BEER_DESCRIPTION = "beerDescription";
+    public static final String BEER_IMAGE_URL = "beerImageUrl";
 
     CompositeDisposable mCompositeDisposable;
     CollapsingToolbarLayout mCollapsingToolbarLayout;
@@ -55,6 +59,12 @@ public class BeerDetailActivity extends AppCompatActivity {
     @BindView(R.id.tv_beer_style)
     TextView mStyleInfo;
 
+    @BindView(R.id.tv_beer_description_title)
+    TextView mBeerDescriptionHeading;
+
+    @BindView(R.id.tv_beer_style_title)
+    TextView mBeerStyleHeading;
+
     @BindView(R.id.loading_layout)
     LinearLayout mLoading;
 
@@ -63,6 +73,8 @@ public class BeerDetailActivity extends AppCompatActivity {
 
     @BindView(R.id.beer_image)
     ImageView mBeerBanner;
+
+    private String mBeerStyle, mBeerExtras, mBeerTitle, mBeerDescription, mBeerImageUrl;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,21 +87,34 @@ public class BeerDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         setSupportActionBar(toolbar);
-        mCollapsingToolbarLayout.setTitle("Beer Details");
+        mCollapsingToolbarLayout.setTitle(getString(R.string.app_name));
 
         int position = getIntent().getIntExtra(BeerListActivity.GRID_POSITION, 0);
-        mBeerId = getIntent().getStringExtra(BEER_ID); //"oeGSxs"
+        String beerId = getIntent().getStringExtra(BEER_ID);
         int bannerResource = CommonUtils.getBeerImageDrawable(position);
         mBeerBanner.setImageResource(bannerResource);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        BeersApiInterface moviesInterface = NetworkUtils.buildRetrofit().create(BeersApiInterface.class);
+        if (savedInstanceState == null) {
+            BeersApiInterface moviesInterface = NetworkUtils.buildRetrofit().create(BeersApiInterface.class);
 
-        mCompositeDisposable.add(moviesInterface.getBeerDetails(mBeerId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(this::apiResponse, this::apiError));
+            mCompositeDisposable.add(moviesInterface.getBeerDetails(beerId)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(this::apiResponse, this::apiError));
+        } else {
+            mLoading.setVisibility(View.GONE);
+
+            mBeerStyle = savedInstanceState.getString(BEER_STYLE);
+            mBeerExtras = savedInstanceState.getString(BEER_EXTRAS);
+            mBeerTitle = savedInstanceState.getString(BEER_TITLE);
+            mBeerDescription = savedInstanceState.getString(BEER_DESCRIPTION);
+            mBeerImageUrl = savedInstanceState.getString(BEER_IMAGE_URL);
+            mBeerPoster.setVisibility(View.VISIBLE);
+
+            displayDetails();
+        }
     }
 
     @Override
@@ -104,66 +129,82 @@ public class BeerDetailActivity extends AppCompatActivity {
 
     private void apiResponse(BeerDetail beerDetail) {
         mLoading.setVisibility(View.GONE);
+        mBeerPoster.setVisibility(View.VISIBLE);
 
         Datum data = beerDetail.getData();
 
         if (data != null) {
 
-            String name = data.getName();
-            String displayName = data.getNameDisplay();
-            String description = data.getDescription();
-
-            if (name != null) {
-                mCollapsingToolbarLayout.setTitle(name);
-            }
-
-            if (displayName != null) {
-                mTitle.setVisibility(View.VISIBLE);
-                mTitle.setText(displayName);
-            }
+            mBeerTitle = data.getNameDisplay();
+            mBeerDescription = data.getDescription();
 
             if (data.getLabels() != null) {
-                String mediumUrl = data.getLabels().getMedium();
-                if (mediumUrl != null) {
-                    Picasso.with(this)
-                            .load(mediumUrl)
-                            .error(R.drawable.no_image)
-                            .placeholder(R.drawable.no_image)
-                            .into(mBeerPoster);
-                }
+                mBeerImageUrl = data.getLabels().getMedium();
             }
 
-            String extraInfo = CommonUtils.getExtraInfo(this, data);
-            if (!extraInfo.isEmpty()) {
-                mExtraInfo.setText(extraInfo);
-            } else {
-                mExtraInfo.setText(getString(R.string.extras_empty));
-            }
+            mBeerExtras = CommonUtils.getExtraInfo(this, data);
 
-            if (description != null) {
-                if (!description.isEmpty()) {
-                    mDescription.setVisibility(View.VISIBLE);
-                    mDescription.setText(description);
-                }
-            }
+            mBeerStyle = CommonUtils.getStyleInfo(this, data);
 
-            String styleInfo = CommonUtils.getStyleInfo(this, data);
-            if (!styleInfo.isEmpty()) {
-                mStyleInfo.setVisibility(View.VISIBLE);
-                mStyleInfo.setText(styleInfo);
-            }
-
+            displayDetails();
         }
     }
 
     private void apiError(Throwable throwable) {
+        mBeerPoster.setVisibility(View.VISIBLE);
         mLoading.setVisibility(View.GONE);
         Log.d(TAG, throwable.getLocalizedMessage());
+    }
+
+    private void displayDetails() {
+
+        if (mBeerTitle != null) {
+            mTitle.setVisibility(View.VISIBLE);
+            mTitle.setText(mBeerTitle);
+        }
+
+        if (mBeerImageUrl != null) {
+            Picasso.with(this)
+                    .load(mBeerImageUrl)
+                    .error(R.drawable.no_image)
+                    .placeholder(R.drawable.no_image)
+                    .into(mBeerPoster);
+        }
+
+        if (mBeerDescription != null) {
+            if (!mBeerDescription.isEmpty()) {
+                mBeerDescriptionHeading.setVisibility(View.VISIBLE);
+                mDescription.setVisibility(View.VISIBLE);
+                mDescription.setText(mBeerDescription);
+            }
+        }
+
+        if (!mBeerExtras.isEmpty()) {
+            mExtraInfo.setText(mBeerExtras);
+        } else {
+            mExtraInfo.setText(getString(R.string.extras_empty));
+        }
+
+        if (!mBeerStyle.isEmpty()) {
+            mBeerStyleHeading.setVisibility(View.VISIBLE);
+            mStyleInfo.setVisibility(View.VISIBLE);
+            mStyleInfo.setText(mBeerStyle);
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mCompositeDisposable.clear();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(BEER_STYLE, mBeerStyle);
+        outState.putString(BEER_EXTRAS, mBeerExtras);
+        outState.putString(BEER_TITLE, mBeerTitle);
+        outState.putString(BEER_DESCRIPTION, mBeerDescription);
+        outState.putString(BEER_IMAGE_URL, mBeerImageUrl);
+        super.onSaveInstanceState(outState);
     }
 }

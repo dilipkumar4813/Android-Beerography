@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:padding="@dimen/keyline2"
+        android:padding="@dimen/keyline_2"
         android:textColor="@android:color/white"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textStyle="bold" />

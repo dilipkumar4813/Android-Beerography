@@ -38,7 +38,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/keyline2"
+                android:layout_marginTop="@dimen/keyline_2"
                 android:gravity="center"
                 android:text="@string/loading_data"
                 android:textStyle="bold" />
