@@ -43,13 +43,16 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     @BindView(R.id.progress_load_more)
     ProgressBar loadMore;
 
+    private static final String BEER_LIST = "beerList";
+    private static final String BEER_COUNT = "beerCount";
+
     CompositeDisposable mCompositeDisposable;
     private List<Datum> mList = new ArrayList<>();
     private GridLayoutManager mGridLayoutManager;
     private int mPageCount = 1;
     private boolean loading = true;
     private BeerListAdapter mAdapter;
-    int mScrollToPosition;
+    private int mScrollToPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +71,15 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         mBeerList.setLayoutManager(mGridLayoutManager);
         mAdapter = new BeerListAdapter(BeerListActivity.this, mList, this);
 
-        if(savedInstanceState==null){
+        if (savedInstanceState == null) {
             loadBeers();
+        } else {
+            loadingLayout.setVisibility(View.GONE);
+            mList = savedInstanceState.getParcelableArrayList(BEER_LIST);
+            mAdapter = new BeerListAdapter(BeerListActivity.this, mList, this);
+            mPageCount = savedInstanceState.getInt(BEER_COUNT);
+            mBeerList.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
         }
 
         mBeerList.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -78,7 +88,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
                 if (dy > 0) {
                     int visibleItemCount = mGridLayoutManager.getChildCount();
                     int pastVisiblesItems = mGridLayoutManager.findFirstVisibleItemPosition();
-                    mScrollToPosition = visibleItemCount+pastVisiblesItems;
+                    mScrollToPosition = visibleItemCount + pastVisiblesItems;
 
                     int totalItemCount = mGridLayoutManager.getItemCount();
 
@@ -107,7 +117,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     private void apiResponse(SelectedPage selectedPage) {
         loadingLayout.setVisibility(View.GONE);
 
-        if(loadMore.getVisibility()==View.VISIBLE){
+        if (loadMore.getVisibility() == View.VISIBLE) {
             mBeerList.scrollToPosition(mScrollToPosition);
             //mBeerList.smoothScrollToPosition(mScrollToPosition);
         }
@@ -148,5 +158,12 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
                     .toBundle();
         }
         startActivity(detailsIntent, bundle);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(BEER_LIST, new ArrayList<>(mList));
+        outState.putInt(BEER_COUNT, mPageCount);
+        super.onSaveInstanceState(outState);
     }
 }

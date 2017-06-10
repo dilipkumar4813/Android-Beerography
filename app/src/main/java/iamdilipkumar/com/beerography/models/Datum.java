@@ -1,10 +1,13 @@
 
 package iamdilipkumar.com.beerography.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Datum {
+public class Datum implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -222,4 +225,49 @@ public class Datum {
         this.style = style;
     }
 
+    protected Datum(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        nameDisplay = in.readString();
+        description = in.readString();
+        abv = in.readString();
+        ibu = in.readString();
+        isOrganic = in.readString();
+        status = in.readString();
+        statusDisplay = in.readString();
+        createDate = in.readString();
+        updateDate = in.readString();
+    }
+
+    public static final Creator<Datum> CREATOR = new Creator<Datum>() {
+        @Override
+        public Datum createFromParcel(Parcel in) {
+            return new Datum(in);
+        }
+
+        @Override
+        public Datum[] newArray(int size) {
+            return new Datum[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(nameDisplay);
+        dest.writeString(description);
+        dest.writeString(abv);
+        dest.writeString(ibu);
+        dest.writeString(isOrganic);
+        dest.writeString(status);
+        dest.writeString(statusDisplay);
+        dest.writeString(createDate);
+        dest.writeString(updateDate);
+    }
 }
