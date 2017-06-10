@@ -4,12 +4,17 @@ import android.app.ActivityOptions;
 import android.app.Dialog;
 import android.content.Intent;
 import android.provider.Settings;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,6 +30,7 @@ import iamdilipkumar.com.beerography.R;
 import iamdilipkumar.com.beerography.adapters.BeerListAdapter;
 import iamdilipkumar.com.beerography.models.Datum;
 import iamdilipkumar.com.beerography.models.SelectedPage;
+import iamdilipkumar.com.beerography.ui.fragments.AboutFragment;
 import iamdilipkumar.com.beerography.utilities.BeersApiInterface;
 import iamdilipkumar.com.beerography.utilities.CommonUtils;
 import iamdilipkumar.com.beerography.utilities.NetworkUtils;
@@ -109,6 +115,30 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_share:
+                CommonUtils.shareData(this);
+                break;
+            case R.id.action_about:
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.main_container_layout, new AboutFragment());
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                break;
+        }
+        return true;
+    }
+
     private void loadBeers() {
         BeersApiInterface moviesInterface = NetworkUtils.buildRetrofit().create(BeersApiInterface.class);
 
@@ -165,7 +195,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
                 }
             }
             startActivity(detailsIntent, bundle);
-        }else{
+        } else {
             Dialog network = CommonUtils.noNetworkDialog(this);
 
             Button btnYes = (Button) network.findViewById(R.id.btn_yes);

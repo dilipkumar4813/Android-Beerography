@@ -148,7 +148,7 @@ public class BeerDetailActivity extends AppCompatActivity {
 
             mBeerExtras = CommonUtils.getExtraInfo(this, data);
 
-            mBeerStyle = CommonUtils.getStyleInfo(this, data);
+            mBeerStyle = CommonUtils.getStyleInfo(data);
 
             displayDetails();
         }

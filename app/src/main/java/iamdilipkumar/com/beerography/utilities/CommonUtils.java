@@ -4,11 +4,11 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.support.v4.app.ShareCompat;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.TextView;
 
 import iamdilipkumar.com.beerography.R;
 import iamdilipkumar.com.beerography.models.Datum;
@@ -61,7 +61,7 @@ public class CommonUtils {
         return extraInfo;
     }
 
-    public static String getStyleInfo(Context context, Datum data) {
+    public static String getStyleInfo(Datum data) {
         String styleInfo = "";
 
         Style style = data.getStyle();
@@ -137,11 +137,13 @@ public class CommonUtils {
         return networkAvailable;
     }
 
-    public static Dialog buildTwoButtonDialog(Activity activity) {
+    private static Dialog buildTwoButtonDialog(Activity activity) {
         final Dialog twoButtonDialog = new Dialog(activity);
         twoButtonDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         twoButtonDialog.setContentView(R.layout.dialog_two_button);
         twoButtonDialog.setCanceledOnTouchOutside(false);
+
+        twoButtonDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
 
         return twoButtonDialog;
     }
@@ -158,5 +160,13 @@ public class CommonUtils {
         });
 
         return networkDialog;
+    }
+
+    public static void shareData(Activity activity) {
+        ShareCompat.IntentBuilder shareBuilder = ShareCompat.IntentBuilder.from(activity);
+        shareBuilder.setType(activity.getString(R.string.share_type));
+        shareBuilder.setText(activity.getString(R.string.share_content));
+        shareBuilder.setChooserTitle(activity.getString(R.string.share_title));
+        shareBuilder.startChooser();
     }
 }

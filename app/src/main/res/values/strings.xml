@@ -18,6 +18,14 @@
     <string name="no_network_title">No network</string>
     <string name="no_network">Whoops, no Internet. Would you like to connect to Internet?</string>
 
+    <string name="action_share">Share</string>
+    <string name="share_type" translatable="false">text/plain</string>
+    <string name="share_title">Share Beerography</string>
+    <string name="share_content">Check out the coolest Beer app, Beerography in the play store</string>
+    <string name="action_about">About</string>
     <!--Animation strings-->
     <string name="main_list_item_transition_name" translatable="false">beeritem</string>
+
+    <string name="version">Version 1.0</string>
+    <string name="powered">Powered by BreweryDB</string>
 </resources>
