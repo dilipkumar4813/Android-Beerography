@@ -2,6 +2,8 @@ package iamdilipkumar.com.beerography.ui.activities;
 
 import android.app.ActivityOptions;
 import android.app.Dialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -21,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +43,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-public class BeerListActivity extends AppCompatActivity implements BeerListAdapter.BeerClick {
+public class BeerListActivity extends AppCompatActivity implements BeerListAdapter.BeerClick, SearchView.OnQueryTextListener {
 
     private static final String TAG = BeerListActivity.class.getSimpleName();
 
@@ -119,6 +124,17 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+
+        SearchManager searchManager = (SearchManager)
+                getSystemService(Context.SEARCH_SERVICE);
+        MenuItem searchMenuItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+
+        searchView.setSearchableInfo(searchManager.
+                getSearchableInfo(getComponentName()));
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
+
         return true;
     }
 
@@ -216,5 +232,34 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         outState.putParcelableArrayList(BEER_LIST, new ArrayList<>(mList));
         outState.putInt(BEER_COUNT, mPageCount);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        loadingLayout.setVisibility(View.VISIBLE);
+        mList.clear();
+        mBeerList.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+
+        try {
+            query = URLEncoder.encode(query, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        BeersApiInterface moviesInterface = NetworkUtils
+                .buildRetrofit()
+                .create(BeersApiInterface.class);
+
+        mCompositeDisposable.add(moviesInterface.getBeersSearch(query)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::apiResponse, this::apiError));
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 }

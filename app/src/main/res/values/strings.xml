@@ -28,4 +28,6 @@
 
     <string name="version">Version 1.0</string>
     <string name="powered">Powered by BreweryDB</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Search Beer</string>
 </resources>

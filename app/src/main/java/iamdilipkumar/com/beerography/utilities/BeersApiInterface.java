@@ -11,7 +11,7 @@ import retrofit2.http.Query;
  * Created on 04/06/17.
  *
  * @author dilipkumar4813
- * @version 1.0
+ * @version 1.5
  */
 
 public interface BeersApiInterface {
@@ -21,4 +21,7 @@ public interface BeersApiInterface {
 
     @GET("/v2/beer/{id}")
     Observable<BeerDetail> getBeerDetails(@Path("id") String id);
+
+    @GET("/v2/search")
+    Observable<SelectedPage> getBeersSearch(@Query("q") String searchString);
 }
