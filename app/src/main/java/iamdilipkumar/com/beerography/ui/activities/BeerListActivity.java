@@ -5,9 +5,16 @@ import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -23,6 +30,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -43,7 +51,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-public class BeerListActivity extends AppCompatActivity implements BeerListAdapter.BeerClick, SearchView.OnQueryTextListener {
+public class BeerListActivity extends AppCompatActivity implements BeerListAdapter.BeerClick, SearchView.OnQueryTextListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = BeerListActivity.class.getSimpleName();
 
@@ -58,11 +66,18 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     @BindView(R.id.progress_load_more)
     ProgressBar loadMore;
 
+    @BindView(R.id.tv_error_message)
+    TextView mErrorMessage;
+
+    @BindView(R.id.pb_loading)
+    ProgressBar mLoading;
+
     private static final String BEER_LIST = "beerList";
     private static final String BEER_COUNT = "beerCount";
 
     CompositeDisposable mCompositeDisposable;
     private List<Datum> mList = new ArrayList<>();
+    private List<Datum> mMainList = new ArrayList<>();
     private GridLayoutManager mGridLayoutManager;
     private int mPageCount = 1;
     private boolean loading = true;
@@ -85,6 +100,17 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         mGridLayoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns));
         mBeerList.setLayoutManager(mGridLayoutManager);
         mAdapter = new BeerListAdapter(BeerListActivity.this, mList, this);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, actionBarToolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         if (savedInstanceState == null) {
             loadBeers();
@@ -141,15 +167,13 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_share:
-                CommonUtils.shareData(this);
-                break;
-            case R.id.action_about:
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add(R.id.main_container_layout, new AboutFragment());
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+            case R.id.action_main_list:
+                if (mMainList.size() > 0) {
+                    mList.clear();
+                    mList.addAll(mMainList);
+                    mBeerList.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                }
                 break;
         }
         return true;
@@ -169,13 +193,18 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
 
         if (loadMore.getVisibility() == View.VISIBLE) {
             mBeerList.scrollToPosition(mScrollToPosition);
-            //mBeerList.smoothScrollToPosition(mScrollToPosition);
         }
         loadMore.setVisibility(View.GONE);
 
-        mList.addAll(selectedPage.getData());
-        mBeerList.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+        if (selectedPage.getData() != null) {
+            mList.addAll(selectedPage.getData());
+            mBeerList.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+        } else {
+            loadingLayout.setVisibility(View.VISIBLE);
+            mErrorMessage.setText(getString(R.string.no_beers));
+            mLoading.setVisibility(View.GONE);
+        }
 
         loading = true;
     }
@@ -237,6 +266,9 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     @Override
     public boolean onQueryTextSubmit(String query) {
         loadingLayout.setVisibility(View.VISIBLE);
+
+        mMainList.addAll(mList);
+
         mList.clear();
         mBeerList.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
@@ -261,5 +293,60 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     @Override
     public boolean onQueryTextChange(String newText) {
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        switch (item.getItemId()) {
+            case R.id.nav_home:
+                Fragment fragment = fragmentManager.findFragmentById(R.id.main_container_layout);
+                if (fragment != null) {
+                    fragmentTransaction.remove(fragment);
+                    fragmentTransaction.commit();
+                }
+                break;
+            case R.id.nav_share:
+                CommonUtils.shareData(this);
+                break;
+            case R.id.nav_about:
+                fragmentTransaction.add(R.id.main_container_layout, new AboutFragment());
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                break;
+            case R.id.nav_feedback:
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                emailIntent.setData(Uri.parse("mailto:"));
+                emailIntent.setType(getString(R.string.share_type));
+                emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+                        new String[]{"dilipkumar4813@gmail.com"});
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Beerography feedback");
+
+                try {
+                    startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    Log.e(TAG, ex.getLocalizedMessage());
+                }
+                break;
+            case R.id.nav_exit:
+                BeerListActivity.this.finish();
+                break;
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

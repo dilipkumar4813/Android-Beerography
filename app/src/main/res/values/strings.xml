@@ -23,6 +23,10 @@
     <string name="share_title">Share Beerography</string>
     <string name="share_content">Check out the coolest Beer app, Beerography in the play store</string>
     <string name="action_about">About</string>
+    <string name="action_exit">Exit</string>
+    <string name="action_feedback">Feedback</string>
+    <string name="action_home">Home</string>
+    <string name="action_main_list">Main list</string>
     <!--Animation strings-->
     <string name="main_list_item_transition_name" translatable="false">beeritem</string>
 
@@ -30,4 +34,9 @@
     <string name="powered">Powered by BreweryDB</string>
     <string name="search">Search</string>
     <string name="search_hint">Search Beer</string>
+
+    <string name="drawer_welcome_text">Ahoy me bucko</string>
+    <string name="navigation_drawer_open">Open chest</string>
+    <string name="navigation_drawer_close">Close chest</string>
+    <string name="no_beers">Whoops, no beers found me bucko</string>
 </resources>
