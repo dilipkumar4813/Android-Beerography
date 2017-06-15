@@ -22,6 +22,8 @@ import iamdilipkumar.com.beerography.utilities.CommonUtils;
  */
 public class SplashActivity extends AppCompatActivity {
 
+    private boolean mLoaded = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +42,11 @@ public class SplashActivity extends AppCompatActivity {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    SplashActivity.this.finish();
-                    startActivity(mainList);
+                    if (!mLoaded) {
+                        SplashActivity.this.finish();
+                        startActivity(mainList);
+                        mLoaded = true;
+                    }
                 }
             }, 1000);
         } else {

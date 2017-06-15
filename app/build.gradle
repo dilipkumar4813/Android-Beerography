@@ -8,8 +8,8 @@ android {
         applicationId "iamdilipkumar.com.beerography"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API", API_KEY)
     }

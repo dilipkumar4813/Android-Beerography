@@ -12,20 +12,15 @@
         android:layout_centerVertical="true"
         android:orientation="vertical">
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@mipmap/ic_launcher"
-            android:drawablePadding="@dimen/keyline_2"
-            android:drawableStart="@mipmap/ic_launcher"
-            android:text="@string/app_name"
-            android:textSize="@dimen/splash_text_size" />
+            android:src="@drawable/main_logo"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/keyline_2"
             android:text="@string/version" />
 
         <TextView

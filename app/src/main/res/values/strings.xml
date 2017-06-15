@@ -2,7 +2,7 @@
     <string name="app_name">Beerography</string>
     <string name="title_beer_detail">Beer Detail</string>
     <string name="splash_button">Let\'s get some beers</string>
-    <string name="loading_data">Contacting our drunk guy for details\nHang on</string>
+    <string name="loading_data">Alright matey\n We are contactin\' th\' Captain fer information</string>
 
     <!--Beer details-->
     <string name="extras_empty">Woow, no details available at the time.</string>
@@ -30,7 +30,7 @@
     <!--Animation strings-->
     <string name="main_list_item_transition_name" translatable="false">beeritem</string>
 
-    <string name="version">Version 1.0</string>
+    <string name="version">Version 1.5</string>
     <string name="powered">Powered by BreweryDB</string>
     <string name="search">Search</string>
     <string name="search_hint">Search Beer</string>
