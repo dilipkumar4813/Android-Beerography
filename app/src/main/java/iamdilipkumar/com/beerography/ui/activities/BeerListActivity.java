@@ -1,12 +1,10 @@
 package iamdilipkumar.com.beerography.ui.activities;
 
 import android.app.ActivityOptions;
-import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -26,7 +24,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -168,6 +165,8 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_main_list:
+                removeFragment();
+
                 if (mMainList.size() > 0) {
                     mList.clear();
                     mList.addAll(mMainList);
@@ -180,12 +179,16 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     }
 
     private void loadBeers() {
-        BeersApiInterface moviesInterface = NetworkUtils.buildRetrofit().create(BeersApiInterface.class);
+        if (CommonUtils.checkNetworkConnectivity(this)) {
+            BeersApiInterface moviesInterface = NetworkUtils.buildRetrofit().create(BeersApiInterface.class);
 
-        mCompositeDisposable.add(moviesInterface.getBeersList(mPageCount)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(this::apiResponse, this::apiError));
+            mCompositeDisposable.add(moviesInterface.getBeersList(mPageCount)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(this::apiResponse, this::apiError));
+        } else {
+            CommonUtils.noNetworkPreActionDialog(this);
+        }
     }
 
     private void apiResponse(SelectedPage selectedPage) {
@@ -241,18 +244,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
             }
             startActivity(detailsIntent, bundle);
         } else {
-            Dialog network = CommonUtils.noNetworkDialog(this);
-
-            Button btnYes = (Button) network.findViewById(R.id.btn_yes);
-            btnYes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    network.dismiss();
-                    startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                }
-            });
-
-            network.show();
+            CommonUtils.noNetworkPreActionDialog(this);
         }
     }
 
@@ -279,14 +271,18 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
             e.printStackTrace();
         }
 
-        BeersApiInterface moviesInterface = NetworkUtils
-                .buildRetrofit()
-                .create(BeersApiInterface.class);
+        if (CommonUtils.checkNetworkConnectivity(this)) {
+            BeersApiInterface moviesInterface = NetworkUtils
+                    .buildRetrofit()
+                    .create(BeersApiInterface.class);
 
-        mCompositeDisposable.add(moviesInterface.getBeersSearch(query)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(this::apiResponse, this::apiError));
+            mCompositeDisposable.add(moviesInterface.getBeersSearch(query)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(this::apiResponse, this::apiError));
+        } else {
+            CommonUtils.noNetworkPreActionDialog(this);
+        }
         return false;
     }
 
@@ -308,21 +304,16 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
         switch (item.getItemId()) {
             case R.id.nav_home:
-                Fragment fragment = fragmentManager.findFragmentById(R.id.main_container_layout);
-                if (fragment != null) {
-                    fragmentTransaction.remove(fragment);
-                    fragmentTransaction.commit();
-                }
+                removeFragment();
                 break;
             case R.id.nav_share:
                 CommonUtils.shareData(this);
                 break;
             case R.id.nav_about:
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.add(R.id.main_container_layout, new AboutFragment());
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
@@ -342,11 +333,21 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
                 }
                 break;
             case R.id.nav_exit:
-                BeerListActivity.this.finish();
+                CommonUtils.exitAppDialog(this).show();
                 break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void removeFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.main_container_layout);
+        if (fragment != null) {
+            fragmentTransaction.remove(fragment);
+            fragmentTransaction.commit();
+        }
     }
 }

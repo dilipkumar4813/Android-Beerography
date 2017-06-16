@@ -39,4 +39,7 @@
     <string name="navigation_drawer_open">Open chest</string>
     <string name="navigation_drawer_close">Close chest</string>
     <string name="no_beers">Whoops, no beers found me bucko</string>
+
+    <string name="quit">Quit</string>
+    <string name="quit_text">Are you sure you want to exit the app, matey?</string>
 </resources>

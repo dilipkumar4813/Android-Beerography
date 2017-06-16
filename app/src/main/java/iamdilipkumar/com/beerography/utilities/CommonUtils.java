@@ -3,12 +3,15 @@ package iamdilipkumar.com.beerography.utilities;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.provider.Settings;
 import android.support.v4.app.ShareCompat;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import iamdilipkumar.com.beerography.R;
 import iamdilipkumar.com.beerography.models.Datum;
@@ -160,6 +163,58 @@ public class CommonUtils {
         });
 
         return networkDialog;
+    }
+
+    public static void noNetworkPreActionDialog(Activity activity) {
+        final Dialog networkDialog = buildTwoButtonDialog(activity);
+
+        Button btnCancel = (Button) networkDialog.findViewById(R.id.btn_no);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                networkDialog.dismiss();
+            }
+        });
+
+        Button btnYes = (Button) networkDialog.findViewById(R.id.btn_yes);
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                networkDialog.dismiss();
+                activity.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+            }
+        });
+
+        networkDialog.show();
+    }
+
+    public static Dialog exitAppDialog(Activity activity) {
+        final Dialog exitDialog = buildTwoButtonDialog(activity);
+
+        TextView tvTitle = (TextView) exitDialog.findViewById(R.id.tv_dialog_title);
+        tvTitle.setText(activity.getString(R.string.quit));
+
+        TextView tvMessage = (TextView) exitDialog.findViewById(R.id.tv_dialog_message);
+        tvMessage.setText(activity.getString(R.string.quit_text));
+
+        Button btnCancel = (Button) exitDialog.findViewById(R.id.btn_no);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exitDialog.dismiss();
+            }
+        });
+
+        Button btnYes = (Button) exitDialog.findViewById(R.id.btn_yes);
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exitDialog.dismiss();
+                activity.finish();
+            }
+        });
+
+        return exitDialog;
     }
 
     public static void shareData(Activity activity) {
