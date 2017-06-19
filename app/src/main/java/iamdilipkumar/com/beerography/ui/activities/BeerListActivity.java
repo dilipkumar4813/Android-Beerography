@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -78,8 +79,11 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     private GridLayoutManager mGridLayoutManager;
     private int mPageCount = 1;
     private boolean loading = true;
+    private boolean searchLoad = false;
     private BeerListAdapter mAdapter;
     private int mScrollToPosition;
+    private SearchView mSearchView;
+    private MenuItem mSearchMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +134,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
 
                     int totalItemCount = mGridLayoutManager.getItemCount();
 
-                    if (loading) {
+                    if (loading && !searchLoad) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             loadMore.setVisibility(View.VISIBLE);
                             loading = false;
@@ -150,13 +154,13 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
 
         SearchManager searchManager = (SearchManager)
                 getSystemService(Context.SEARCH_SERVICE);
-        MenuItem searchMenuItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+        mSearchMenuItem = menu.findItem(R.id.search);
+        mSearchView = (SearchView) mSearchMenuItem.getActionView();
 
-        searchView.setSearchableInfo(searchManager.
+        mSearchView.setSearchableInfo(searchManager.
                 getSearchableInfo(getComponentName()));
-        searchView.setSubmitButtonEnabled(true);
-        searchView.setOnQueryTextListener(this);
+        mSearchView.setSubmitButtonEnabled(true);
+        mSearchView.setOnQueryTextListener(this);
 
         return true;
     }
@@ -165,6 +169,9 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_main_list:
+                collapseSearch();
+
+                searchLoad = false;
                 removeFragment();
 
                 if (mMainList.size() > 0) {
@@ -216,8 +223,8 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         loadingLayout.setVisibility(View.GONE);
         loadMore.setVisibility(View.GONE);
 
-        Log.d(TAG, throwable.getLocalizedMessage());
         loading = true;
+        Toast.makeText(this, "Whoops, something went wrong try again later", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -272,6 +279,8 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         }
 
         if (CommonUtils.checkNetworkConnectivity(this)) {
+            searchLoad = true;
+
             BeersApiInterface moviesInterface = NetworkUtils
                     .buildRetrofit()
                     .create(BeersApiInterface.class);
@@ -306,7 +315,15 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
 
         switch (item.getItemId()) {
             case R.id.nav_home:
+                searchLoad = false;
+                collapseSearch();
                 removeFragment();
+                break;
+            case R.id.nav_game:
+                Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_terminology:
+                Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_share:
                 CommonUtils.shareData(this);
@@ -348,6 +365,12 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         if (fragment != null) {
             fragmentTransaction.remove(fragment);
             fragmentTransaction.commit();
+        }
+    }
+
+    private void collapseSearch() {
+        if (!mSearchView.isIconified()) {
+            mSearchMenuItem.collapseActionView();
         }
     }
 }

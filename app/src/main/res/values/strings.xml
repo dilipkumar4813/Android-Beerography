@@ -26,6 +26,8 @@
     <string name="action_exit">Exit</string>
     <string name="action_feedback">Feedback</string>
     <string name="action_home">Home</string>
+    <string name="action_game">Game</string>
+    <string name="action_terminology">Terminology</string>
     <string name="action_main_list">Main list</string>
     <!--Animation strings-->
     <string name="main_list_item_transition_name" translatable="false">beeritem</string>

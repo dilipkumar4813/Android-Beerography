@@ -1,22 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/nav_home"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/action_home" />
-    <item
-        android:id="@+id/nav_share"
-        android:icon="@drawable/ic_share_black_24dp"
-        android:title="@string/action_share" />
-    <item
-        android:id="@+id/nav_about"
-        android:icon="@drawable/ic_info_black_24dp"
-        android:title="@string/action_about" />
-    <item
-        android:id="@+id/nav_feedback"
-        android:icon="@drawable/ic_feedback_black_24dp"
-        android:title="@string/action_feedback" />
+    <!--<group android:checkableBehavior="single">-->
+    <group>
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/action_home" />
+
+        <item
+            android:id="@+id/nav_game"
+            android:icon="@drawable/ic_whatshot_black_24dp"
+            android:title="@string/action_game" />
+
+        <item
+            android:id="@+id/nav_terminology"
+            android:icon="@drawable/ic_school_black_24dp"
+            android:title="@string/action_terminology" />
+    </group>
+
+    <group>
+        <item
+            android:id="@+id/nav_share"
+            android:icon="@drawable/ic_share_black_24dp"
+            android:title="@string/action_share" />
+
+        <item
+            android:id="@+id/nav_feedback"
+            android:icon="@drawable/ic_feedback_black_24dp"
+            android:title="@string/action_feedback" />
+
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_info_black_24dp"
+            android:title="@string/action_about" />
+    </group>
+
     <item
         android:id="@+id/nav_exit"
         android:icon="@drawable/ic_exit_to_app_black_24dp"

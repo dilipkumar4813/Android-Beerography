@@ -140,6 +140,25 @@ public class CommonUtils {
         return networkAvailable;
     }
 
+    public static boolean checkNetworkConnectivityAndShowDialog(Context context) {
+        boolean networkAvailable = false;
+
+        ConnectivityManager conMgr = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (conMgr.getActiveNetworkInfo() != null
+                && conMgr.getActiveNetworkInfo().isAvailable()
+                && conMgr.getActiveNetworkInfo().isConnected()) {
+            networkAvailable = true;
+        }
+
+        if(!networkAvailable){
+            noNetworkPreActionDialog((Activity) context);
+        }
+
+        return networkAvailable;
+    }
+
     private static Dialog buildTwoButtonDialog(Activity activity) {
         final Dialog twoButtonDialog = new Dialog(activity);
         twoButtonDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
