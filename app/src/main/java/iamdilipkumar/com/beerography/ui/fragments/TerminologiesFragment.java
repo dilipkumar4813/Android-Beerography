@@ -2,7 +2,6 @@ package iamdilipkumar.com.beerography.ui.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -48,7 +47,7 @@ public class TerminologiesFragment extends Fragment {
         return view;
     }
 
-    class LoadTerminologies extends AsyncTask<Void,Void,Void>{
+    private class LoadTerminologies extends AsyncTask<Void,Void,Void>{
 
         String builtData = "";
 
