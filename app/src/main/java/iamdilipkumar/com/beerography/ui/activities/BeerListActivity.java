@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -42,6 +41,7 @@ import iamdilipkumar.com.beerography.adapters.BeerListAdapter;
 import iamdilipkumar.com.beerography.models.Datum;
 import iamdilipkumar.com.beerography.models.SelectedPage;
 import iamdilipkumar.com.beerography.ui.fragments.AboutFragment;
+import iamdilipkumar.com.beerography.ui.fragments.TerminologiesFragment;
 import iamdilipkumar.com.beerography.utilities.BeersApiInterface;
 import iamdilipkumar.com.beerography.utilities.CommonUtils;
 import iamdilipkumar.com.beerography.utilities.NetworkUtils;
@@ -49,6 +49,10 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
+/**
+ * @author dilipkumar4813
+ * @version 1.5.1
+ */
 public class BeerListActivity extends AppCompatActivity implements BeerListAdapter.BeerClick, SearchView.OnQueryTextListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = BeerListActivity.class.getSimpleName();
@@ -313,6 +317,9 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
         switch (item.getItemId()) {
             case R.id.nav_home:
                 searchLoad = false;
@@ -323,14 +330,14 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
                 Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_terminology:
-                Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show();
+                fragmentTransaction.add(R.id.main_container_layout, new TerminologiesFragment());
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
                 break;
             case R.id.nav_share:
                 CommonUtils.shareData(this);
                 break;
             case R.id.nav_about:
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.add(R.id.main_container_layout, new AboutFragment());
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
@@ -360,11 +367,14 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
 
     private void removeFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        Fragment fragment = fragmentManager.findFragmentById(R.id.main_container_layout);
-        if (fragment != null) {
-            fragmentTransaction.remove(fragment);
-            fragmentTransaction.commit();
+
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++)
+                fragmentManager.popBackStack();
+
+            fragmentManager.beginTransaction().remove(getSupportFragmentManager()
+                    .findFragmentById(R.id.main_container_layout))
+                    .commit();
         }
     }
 
