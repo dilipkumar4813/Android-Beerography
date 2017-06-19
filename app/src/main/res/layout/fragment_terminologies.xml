@@ -8,7 +8,7 @@
         android:id="@+id/tv_terminologies"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="64dp"
+        android:paddingBottom="@dimen/terminology_bottom_padding"
         android:layout_margin="@dimen/keyline_1" />
 
 </ScrollView>

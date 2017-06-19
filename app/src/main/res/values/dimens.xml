@@ -15,5 +15,6 @@
     <dimen name="body_text">16sp</dimen>
     <dimen name="splash_text_size">40sp</dimen>
     <dimen name="splash_margin_bottom">40dp</dimen>
+    <dimen name="terminology_bottom_padding">64dp</dimen>
 
 </resources>
