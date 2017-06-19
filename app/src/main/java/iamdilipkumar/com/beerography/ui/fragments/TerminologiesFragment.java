@@ -1,11 +1,14 @@
 package iamdilipkumar.com.beerography.ui.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -31,46 +34,62 @@ public class TerminologiesFragment extends Fragment {
     @BindView(R.id.tv_terminologies)
     TextView terms;
 
+    @BindView(R.id.pb_loading)
+    ProgressBar loading;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_terminologies, container, false);
 
         ButterKnife.bind(this, view);
 
-        getJsonDataForText();
+        new LoadTerminologies().execute();
 
         return view;
     }
 
-    private void getJsonDataForText() {
-        String data = null;
-        try {
-            InputStream inputStream = getActivity().getResources()
-                    .getAssets().open("terminologies.json");
-
-            int size = inputStream.available();
-            byte[] buffer = new byte[size];
-            inputStream.read(buffer);
-            inputStream.close();
-            data = new String(buffer, "UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    class LoadTerminologies extends AsyncTask<Void,Void,Void>{
 
         String builtData = "";
-        if (data != null) {
-            try {
-                JSONObject jsonData = new JSONObject(data);
-                JSONArray terminologies = jsonData.getJSONArray("terminologies");
 
-                for (int i = 0; i < terminologies.length(); i++) {
-                    JSONObject term = terminologies.getJSONObject(i);
-                    builtData += "<h3>"+term.getString("term") + "</h3>";
-                    builtData += term.getString("definition") + "<br/><br/>";
-                }
-            } catch (JSONException e) {
+        @Override
+        protected Void doInBackground(Void... params) {
+            String data = null;
+            try {
+                InputStream inputStream = getActivity().getResources()
+                        .getAssets().open("terminologies.json");
+
+                int size = inputStream.available();
+                byte[] buffer = new byte[size];
+                inputStream.read(buffer);
+                inputStream.close();
+                data = new String(buffer, "UTF-8");
+            } catch (IOException e) {
                 e.printStackTrace();
             }
+
+
+            if (data != null) {
+                try {
+                    JSONObject jsonData = new JSONObject(data);
+                    JSONArray terminologies = jsonData.getJSONArray("terminologies");
+
+                    for (int i = 0; i < terminologies.length(); i++) {
+                        JSONObject term = terminologies.getJSONObject(i);
+                        builtData += "<h3>"+term.getString("term") + "</h3>";
+                        builtData += term.getString("definition") + "<br/><br/>";
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            loading.setVisibility(View.GONE);
             terms.setText(Html.fromHtml(builtData));
         }
     }
