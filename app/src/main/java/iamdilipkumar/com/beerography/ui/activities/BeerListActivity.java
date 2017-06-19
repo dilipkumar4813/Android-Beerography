@@ -268,10 +268,10 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        removeFragment();
         loadingLayout.setVisibility(View.VISIBLE);
 
         mMainList.addAll(mList);
-
         mList.clear();
         mBeerList.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
