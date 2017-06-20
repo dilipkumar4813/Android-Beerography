@@ -325,6 +325,13 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
                 searchLoad = false;
                 collapseSearch();
                 removeFragment();
+
+                if (mMainList.size() > 0) {
+                    mList.clear();
+                    mList.addAll(mMainList);
+                    mBeerList.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                }
                 break;
             case R.id.nav_game:
                 Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show();
