@@ -101,9 +101,9 @@ public class BeerDetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
-            BeersApiInterface moviesInterface = NetworkUtils.buildRetrofit().create(BeersApiInterface.class);
+            BeersApiInterface beersInterface = NetworkUtils.buildRetrofit().create(BeersApiInterface.class);
 
-            mCompositeDisposable.add(moviesInterface.getBeerDetails(beerId)
+            mCompositeDisposable.add(beersInterface.getBeerDetails(beerId)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(this::apiResponse, this::apiError));
