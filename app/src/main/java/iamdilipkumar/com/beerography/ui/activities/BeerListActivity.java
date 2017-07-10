@@ -29,6 +29,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -78,6 +80,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     private static final String BEER_COUNT = "beerCount";
 
     CompositeDisposable mCompositeDisposable;
+    private FirebaseAnalytics mFirebaseAnalytics;
     private List<Datum> mList = new ArrayList<>();
     private List<Datum> mMainList = new ArrayList<>();
     private GridLayoutManager mGridLayoutManager;
@@ -99,6 +102,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         setSupportActionBar(actionBarToolbar);
 
         mCompositeDisposable = new CompositeDisposable();
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         ButterKnife.bind(this);
 
         mBeerList.setHasFixedSize(true);
@@ -269,6 +273,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     @Override
     public boolean onQueryTextSubmit(String query) {
         removeFragment();
+        logEvent(getString(R.string.analytics_search), getString(R.string.analytics_navigation));
         loadingLayout.setVisibility(View.VISIBLE);
 
         mMainList.addAll(mList);
@@ -322,6 +327,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
 
         switch (item.getItemId()) {
             case R.id.nav_home:
+                logEvent(getString(R.string.analytics_home), getString(R.string.analytics_navigation));
                 searchLoad = false;
                 collapseSearch();
                 removeFragment();
@@ -334,22 +340,27 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
                 }
                 break;
             case R.id.nav_game:
+                logEvent(getString(R.string.analytics_game), getString(R.string.analytics_navigation));
                 Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_terminology:
+                logEvent(getString(R.string.analytics_terminologies), getString(R.string.analytics_navigation));
                 fragmentTransaction.add(R.id.main_container_layout, new TerminologiesFragment());
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 break;
             case R.id.nav_share:
+                logEvent(getString(R.string.analytics_share), getString(R.string.analytics_navigation));
                 CommonUtils.shareData(this);
                 break;
             case R.id.nav_about:
+                logEvent(getString(R.string.analytics_about), getString(R.string.analytics_navigation));
                 fragmentTransaction.add(R.id.main_container_layout, new AboutFragment());
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 break;
             case R.id.nav_feedback:
+                logEvent(getString(R.string.analytics_feedback), getString(R.string.analytics_navigation));
                 Intent emailIntent = new Intent(Intent.ACTION_SEND);
                 emailIntent.setData(Uri.parse("mailto:"));
                 emailIntent.setType(getString(R.string.share_type));
@@ -364,6 +375,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
                 }
                 break;
             case R.id.nav_exit:
+                logEvent(getString(R.string.analytics_exit), getString(R.string.analytics_navigation));
                 CommonUtils.exitAppDialog(this).show();
                 break;
         }
@@ -389,5 +401,13 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         if (!mSearchView.isIconified()) {
             mSearchMenuItem.collapseActionView();
         }
+    }
+
+    private void logEvent(String name, String contentType) {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Main Screen");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, contentType);
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 }

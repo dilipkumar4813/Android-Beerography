@@ -44,4 +44,14 @@
 
     <string name="quit">Quit</string>
     <string name="quit_text">Are you sure you want to exit the app, matey?</string>
+
+    <string name="analytics_navigation" translatable="false">Navigation</string>
+    <string name="analytics_exit" translatable="false">Exit</string>
+    <string name="analytics_feedback" translatable="false">Feedback</string>
+    <string name="analytics_share" translatable="false">Share</string>
+    <string name="analytics_about" translatable="false">About</string>
+    <string name="analytics_terminologies" translatable="false">Terminologies</string>
+    <string name="analytics_game" translatable="false">Game</string>
+    <string name="analytics_home" translatable="false">Home</string>
+    <string name="analytics_search" translatable="false">Search</string>
 </resources>
