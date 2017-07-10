@@ -1,5 +1,7 @@
 # Android-Beerography
-An application meant for beer lovers
+An application meant for beer lovers, which lists about 9 Lakh plus beers. Shows the style of beers and allows users to search through the database. The application also houses a terminologies module which provides information with respect to beers.
+
+[![Play store](https://play.google.com/store/apps/details?id=iamdilipkumar.com.beerography)
 
 # Libraries Used
 * [Butterknife](http://jakewharton.github.io/butterknife/)
